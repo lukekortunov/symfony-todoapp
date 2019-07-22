@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <div class="header">
+        <h2>My To Do List</h2>
+        <form action="{{ path('create_task') }}" method="POST">
+            <input type="text" id="myInput" placeholder="Task title..." aria-label="myInput"/>
+            <button type="submit" class="addBtn">Add a task</button>
+        </form>
+    </div>
+
+    <ul>
+        <li>
+            <a href="{{ path('switch_task', {'id':'1'}) }}"><span class="task-list-item">Do shopping </span></a>
+            <a onclick="return confirm('Are you sure to delete?')" href="{{ path('delete_task', {'id':1}) }}"><span class="close">X</span></a>
+        </li>
+        <li class="checked">
+            <a href="{{ path('switch_task', {'id':'2'}) }}"> <span class="task-list-item">Buy eggs </span></a>
+            <a onclick="return confirm('Are you sure to delete?')" href="{{ path('delete_task', {'id':2}) }}"><span class="close">X</span></a>
+        </li>
+        <li>
+            <a href="{{ path('switch_task', {'id':'3'}) }}"> <span class="task-list-item">Meet John </span> </a>
+            <a onclick="return confirm('Are you sure to delete?')" href="{{ path('delete_task', {'id':3}) }}"><span class="close">X</span></a>
+        </li>
+        <li>
+            <a href="{{ path('switch_task', {'id':'4'}) }}"> <span class="task-list-item">Read a book </span></a>
+            <a onclick="return confirm('Are you sure to delete?')" href="{{ path('delete_task', {'id':4}) }}"><span class="close">X</span></a>
+        </li>
+        <li>
+            <a href="{{ path('switch_task', {'id':'5'}) }}"> <span class="task-list-item">Learn Doctrine ORM </span> </a>
+            <a onclick="return confirm('Are you sure to delete?')" href="{{ path('delete_task', {'id':5}) }}"><span class="close">X</span></a>
+        </li>
+        <li>
+            <a href="{{ path('switch_task', {'id':'6'}) }}"> <span class="task-list-item">Prepare a meal </span> </a>
+            <a onclick="return confirm('Are you sure to delete?')" href="{{ path('delete_task', {'id':6}) }}"><span class="close">X</span></a>
+        </li>
+    </ul>
+{% endblock %}
