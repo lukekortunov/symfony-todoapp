@@ -19,8 +19,8 @@ $ bin/console migrate
 # Optional - load fixtures (dummy data) from src/DataFixtures
 $ bin/console doctrine:fixtures:load
 
-# Start built-in PHP server at localhost port 8080
-$ php -S localhost:8080
+# Start built-in PHP server at localhost port 8000
+$ bin/console server:run
 ```
 
 
