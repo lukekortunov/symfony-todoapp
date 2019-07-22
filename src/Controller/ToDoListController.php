@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Task;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ToDoListController extends AbstractController
@@ -16,8 +18,14 @@ class ToDoListController extends AbstractController
      */
     public function index(): Response
     {
-       
-        return $this->render( 'index.html.twig' );
+        
+        $tasks = $this->getDoctrine()->getRepository( Task::class )->findBy([], [
+            'id' => 'DESC'
+        ]);
+
+        return $this->render( 'index.html.twig', [
+            'tasks' => $tasks
+        ] );
        
     }
     
@@ -26,13 +34,25 @@ class ToDoListController extends AbstractController
      * @Route("/create", name="create_task", methods={"POST"})
      *
      * @param Request $request
+     *
+     * @return RedirectResponse
      */
     public function create( Request $request )
     {
+    
+        $title = trim( $request->get('title') );
         
-        dump( $request );
+        if(empty($title)) return $this->redirectToRoute('home');
         
-        exit('to do: create a new task!');
+        $manager = $this->getDoctrine()->getManager();
+        
+        $task = new Task;
+        $task->setTitle( $title );
+        
+        $manager->persist( $task );
+        $manager->flush();
+        
+        return $this->redirectToRoute( 'home' );
         
     }
     
@@ -41,14 +61,20 @@ class ToDoListController extends AbstractController
      * @Route("/switch/{id}", name="switch_task", methods={"GET"})
      *
      * @param int $id
-     * @param Request $request
+     *
+     * @return RedirectResponse
      */
-    public function switch(int $id, Request $request)
+    public function switch(int $id)
     {
         
-        dump( [ $id, $request ] );
+        $manager = $this->getDoctrine()->getManager();
+        $task = $this->getDoctrine()->getRepository( Task::class )->find($id);
+        $task->setStatus( ! $task->getStatus() );
         
-        exit('switch status of existing to do');
+        $manager->persist( $task );
+        $manager->flush();
+        
+        return $this->redirectToRoute('home');
         
     }
     
@@ -57,13 +83,20 @@ class ToDoListController extends AbstractController
      * @Route("/delete/{id}", name="delete_task", methods={"GET"})
      *
      * @param int $id
+     *
+     * @return RedirectResponse
      */
     public function delete( int $id )
     {
         
-        dump( [ $id ] );
+        $manager = $this->getDoctrine()->getManager();
         
-        exit('delete item of existing to do');
+        $task = $this->getDoctrine()->getRepository(Task::class)->find($id);
+        
+        $manager->remove($task);
+        $manager->flush();
+        
+        return $this->redirectToRoute('home');
         
     }
     
